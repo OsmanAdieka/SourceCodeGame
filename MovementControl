@@ -1,0 +1,46 @@
+using UnityEngine;
+
+public class MovementController : MonoBehaviour
+{
+    public float speed = 10f; // Kecepatan gerakan sprite
+    Animator animator;
+
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        // Mendapatkan input horizontal (arah panah kiri dan kanan, A dan D)
+        float horizontalInput = Input.GetAxis("Horizontal");
+
+        // Pindahkan sprite
+        transform.Translate(Vector3.right * horizontalInput * speed * Time.deltaTime);
+
+        // Atur animasi berlari berdasarkan input horizontal
+        animator.SetBool("isRunning", Mathf.Abs(horizontalInput) > 0);
+
+        // Flip sprite jika bergerak ke kiri
+        if (horizontalInput < 0)
+        {
+            // Kembalikan orientasi sprite jika bergerak ke kanan
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+        // Kembalikan orientasi sprite jika bergerak ke kanan
+        else if (horizontalInput > 0)
+        {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+
+        // Mengaktifkan animasi serangan jika tombol "enter" ditekan
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            animator.SetTrigger("attack");
+        }
+         if (Input.GetKeyDown(KeyCode.O))
+        {
+            animator.SetTrigger("scream");
+        }
+    }
+}
